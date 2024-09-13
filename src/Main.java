@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Main {
+<<<<<<< HEAD
    public static void main(String[] args) {
 
        Guardador guardador = new Guardador();
@@ -26,6 +27,19 @@ public class Main {
    }
     catch(IOException e) {
         e.printStackTrace();
+=======
+    public static void main(String[] args) {
+        String filePath;
+        filePath = "src/resources/temperaturas_cidades/Albania__Tirana.csv";
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+>>>>>>> 9f8758517e4d030081dd463d5e81ecd844a00a25
     }
 }
 
