@@ -24,8 +24,8 @@ public class Guardador {
 
 
     public void exibirDados() {
-        for (Pais pais : paises) {
-            pais.exibirDados();
-        }
+//        for (Pais pais : paises) {
+//            pais.exibirDados();
+//        }
     }
 }

@@ -8,4 +8,13 @@ public class Temperatura {
         this.mes = mes;
         this.valor = valor;
     }
+
+    @Override
+    public String toString() {
+        return "Temperatura{" +
+                "ano=" + ano +
+                ", mes=" + mes +
+                ", valor=" + valor +
+                "}\n";
+    }
 }
