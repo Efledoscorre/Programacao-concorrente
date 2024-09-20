@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.LongStream;
 
 public class Main {
 	private static final Path DIRETORIOCIDADES = Paths.get("src/resources/temperaturas_cidades");
@@ -14,21 +16,26 @@ public class Main {
     private static int contador = 0;
     public static void main(String[] args) throws IOException {
     	
-    	int threads = 2;
-    	
     	List<String> arquivos = lerNomeArquivosCSV();
 
+    	int threads = 8;
         List<List<String>> listaArquivosPorThread = separarArquivosPorThread(arquivos, threads);
 
-        List<Thread> threadsAExecutar = listaArquivosPorThread.stream().map(lista -> {
-            return new Thread(() -> {
-                lista.forEach(arquivo -> lerArquivo(arquivo));
-            });
-        }).toList();
+       
 
-        long inicio = System.currentTimeMillis();
-        threadsAExecutar.forEach(thread -> thread.start());
-
+        ArrayList<Long> temposDeExecucao = new ArrayList<>();
+        
+        long inicioTotal = System.currentTimeMillis();
+        for(int i = 0; i < 10; i++) {     
+            long inicio = System.currentTimeMillis();
+            List<Thread> threadsAExecutar = listaArquivosPorThread.stream().map(lista -> {
+                return new Thread(() -> {
+                    lista.forEach(arquivo -> lerArquivo(arquivo));
+                });
+            }).toList();
+            
+            threadsAExecutar.forEach(thread -> thread.start());
+            
         threadsAExecutar.forEach(thread -> {
             try {
                 thread.join();
@@ -38,11 +45,19 @@ public class Main {
         });
 
         long fim = System.currentTimeMillis();
+        
+        temposDeExecucao.add(fim - inicio);
 
-        System.out.println("ACABOU");
+       /* Transformar esse print em impressão dos dados em arquivo txt
+        (System.out.println("ACABOU");
         System.out.println("CONTAGEM: " + contador);
-        System.out.println("TEMPO DE EXECUÇÃO: " + (fim - inicio));
-
+        System.out.println("TEMPO DE EXECUÇÃO: " + (fim - inicio));)
+        */
+        }
+        long finalTotal = System.currentTimeMillis();
+        long tempoTotal = finalTotal - inicioTotal;
+        System.out.println("Tempo de Execução:" + temposDeExecucao);
+        System.out.println("Tempo total: " + tempoTotal);
     }
 
     private static void lerArquivo(String caminho){
