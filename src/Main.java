@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.stream.LongStream;
 
 public class Main {
-	private static final Path DIRETORIOCIDADES = Paths.get("src/resources/temperaturas_cidades");
+	public static final Path DIRETORIOCIDADES = Paths.get("src/resources/temperaturas_cidades/");
 
     private static int contador = 0;
     public static void main(String[] args) throws IOException {
@@ -21,12 +21,14 @@ public class Main {
     	int threads = 8;
         List<List<String>> listaArquivosPorThread = separarArquivosPorThread(arquivos, threads);
 
-       
+           SubThread.experimentoComSubThread(listaArquivosPorThread);
+
+
 
         ArrayList<Long> temposDeExecucao = new ArrayList<>();
         
         long inicioTotal = System.currentTimeMillis();
-        for(int i = 0; i < 10; i++) {     
+        /*for(int i = 0; i < 10; i++) {
             long inicio = System.currentTimeMillis();
             List<Thread> threadsAExecutar = listaArquivosPorThread.stream().map(lista -> {
                 return new Thread(() -> {
@@ -52,8 +54,10 @@ public class Main {
         (System.out.println("ACABOU");
         System.out.println("CONTAGEM: " + contador);
         System.out.println("TEMPO DE EXECUÇÃO: " + (fim - inicio));)
-        */
+
         }
+        */
+
         long finalTotal = System.currentTimeMillis();
         long tempoTotal = finalTotal - inicioTotal;
         System.out.println("Tempo de Execução:" + temposDeExecucao);
