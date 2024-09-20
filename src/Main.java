@@ -13,20 +13,16 @@ public class Main {
     private static int contador = 0;
     public static void main(String[] args) throws IOException {
 
-        Guardador guardador = new Guardador();
-
         Path diretorioCidades = Paths.get("src/resources/temperaturas_cidades");
 
-        ArrayList<Integer> listTempoDeExecucao = new ArrayList<>();
         List<String> arquivos = new ArrayList<>();
 
         if (Files.isDirectory(diretorioCidades)) {
             DirectoryStream<Path> pathsArquivo = Files.newDirectoryStream(diretorioCidades);
-            int i = 0;
             for(Path arquivo : pathsArquivo){
                 arquivos.add(arquivo.getFileName().toString());
 //                lerArquivo(arquivo);
-                i++;
+
             }
         }
 
