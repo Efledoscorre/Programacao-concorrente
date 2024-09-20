@@ -17,13 +17,13 @@ public class Main {
     public static void main(String[] args) throws Exception {
     	//Descomente a linha abaixo para testar os experimentos com subthreads
     	//SubThread.start();
-    	
+
     	int THREADS = 2;
     	List<String> arquivos = lerNomeArquivosCSV();
     	List<List<String>> listaArquivosPorThread = separarArquivosPorThread(arquivos, THREADS);
-    	
+
         ArrayList<Long> temposDeExecucao = new ArrayList<>();
-        
+
         long inicioTotal = System.currentTimeMillis();
         for(int i = 0; i < 10; i++) {
             long inicio = System.currentTimeMillis();
@@ -32,9 +32,9 @@ public class Main {
                     lista.forEach(arquivo -> lerArquivo(arquivo));
                 });
             }).toList();
-            
+
             threadsAExecutar.forEach(thread -> thread.start());
-            
+
         threadsAExecutar.forEach(thread -> {
             try {
                 thread.join();
@@ -44,7 +44,7 @@ public class Main {
         });
 
         long fim = System.currentTimeMillis();
-        
+
         temposDeExecucao.add(fim - inicio);
 
         //Transformar esse print em impressão dos dados em arquivo txt
@@ -53,13 +53,18 @@ public class Main {
         System.out.println("TEMPO DE EXECUÇÃO: " + (fim - inicio));
 
         }
-       
+
 //        LongStream statistics = temposDeExecucao.stream().mapToLong(num -> num);
 
         long finalTotal = System.currentTimeMillis();
         long tempoTotal = finalTotal - inicioTotal;
         System.out.println("Tempo de Execução:" + temposDeExecucao);
-//        System.out.println("Total: " + statistics.sum() + "; Mínima: " + statistics.min() + "; Máxima: " + statistics.max() + "; Média: " + statistics.average());
+       LongStream statistics = temposDeExecucao.stream().mapToLong(num -> num);
+
+   System.out.println("Total: " + statistics.sum()
+    + "; minima: " + temposDeExecucao.stream().mapToLong(num -> num).min().orElse(0)
+    + "; maxima: " + temposDeExecucao.stream().mapToLong(num -> num).max().orElse(0)
+    + "; media: " + temposDeExecucao.stream().mapToLong(num -> num).average().orElse(0));
     }
 
     private static void lerArquivo(String caminho){
@@ -88,7 +93,7 @@ public class Main {
         System.out.println(cidade.nome);
         cidade.Min_Max();
     }
-    
+
     public static List<String> lerNomeArquivosCSV() throws IOException{
     	 List<String> arquivos = new ArrayList<>();
         if (Files.isDirectory(DIRETORIOCIDADES)) {
@@ -98,27 +103,27 @@ public class Main {
 
             }
         }
-        
+
         return arquivos;
     }
-    
+
     public static List<List<String>> separarArquivosPorThread(List<String> arquivos, int threads){
     	List<List<String>> arquivosPorThread = new ArrayList<>();
-    	
-    	
+
+
     	int numArquivos = arquivos.size();
         int sublistQtd = numArquivos / threads;
-        
+
         for(int i = 0; i < numArquivos;){
             int inicioSubList = i;
             i += sublistQtd;
             arquivosPorThread.add(arquivos.subList(inicioSubList, i));
         }
-        
+
         return arquivosPorThread;
     }
-    
-    
-    
-    
+
+
+
+
 }
