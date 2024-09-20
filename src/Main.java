@@ -31,8 +31,8 @@ public class Main {
         }
 
         List<List<String>> listaArquivosPorThread = new ArrayList<>();
-        int numArquivos = 320;
-        int threads = 320;
+        int numArquivos = arquivos.size();
+        int threads = 4;
 
         for(int i = 0; i < numArquivos;){
             int inicioSubList = i;
