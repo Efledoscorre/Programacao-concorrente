@@ -4,49 +4,48 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class SubThread {
+	
+	static Integer contador = 0;
+	
+	public static void start() throws Exception {
+		List<String> arquivos = Main.lerNomeArquivosCSV();
 
-    public static void experimentoComSubThread(List<List<String>> listaArquivosPorThread ) throws IOException {
-        String primeiraLista = listaArquivosPorThread.getFirst().getFirst();
-        List<List<String>> lists = lerArquivo(primeiraLista);
+    	int threads = 320;
+        List<List<String>> listaArquivosPorThread = Main.separarArquivosPorThread(arquivos, threads);
 
-        List<Thread> threadsAExecutar = lists.stream().map(lista -> {
-            return new Thread(() -> {
-                lista.forEach(arquivo -> {
-                    try {
-                        lerArquivo(arquivo);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-            });
+        List<Thread> threadsComSuasListas = listaArquivosPorThread.stream().map(subLista -> {
+        	return new Thread(() -> {
+        		try {
+					SubThread.lerArquivoComSubThreads(subLista);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        	});
         }).toList();
+        
+        long inicio = System.currentTimeMillis();
+        threadsComSuasListas.forEach(thread -> thread.start());
+        
+        threadsComSuasListas.forEach(thread -> {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		});
+        long fim = System.currentTimeMillis();
+        
+        System.out.println(fim - inicio);
+        System.out.println("NÚMERO DE THREADS CRIADAS: " + SubThread.contador);
+	}
 
-        threadsAExecutar.forEach(thread -> thread.start());
-
-        threadsAExecutar.forEach(thread -> {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        for (int i = 0; i < listaArquivosPorThread.size(); i++){
-
-        }
-
-
-    }
-
-    public static List<List<String>>  lerArquivo(String arquivo) throws IOException {
+    private static List<List<String>> separaConteudoArquivoEm25Partes(String arquivo) throws IOException {
         Path path = Paths.get(Main.DIRETORIOCIDADES + "/" + arquivo);
         List<String> lines = Files.lines(path).toList();
 
         List<List<String>> arquivosPorThread = new ArrayList<>();
-
 
         int sublistQtd = (lines.size()) / 25;
 
@@ -57,13 +56,55 @@ public class SubThread {
         }
 
         return arquivosPorThread;
-
-        /*System.out.println(lines);
-        System.out.println(lines.size());
-        System.out.println(lines.size() / 25);
-        System.out.println(lines.size() % 25);*/
     }
 
+    public static void lerArquivoComSubThreads(List<String> listaNomeArquivos) throws IOException {
+    	Cidade cidade = new Cidade("teste");
+
+    	List<Thread> subThreads = new ArrayList<>();
+    	
+    	for(String arquivo : listaNomeArquivos) {
+    		List<List<String>> subListasPorThread = separaConteudoArquivoEm25Partes(arquivo);
+    		for(List<String> subLista : subListasPorThread) {
+    			Thread thread = new Thread(() -> {
+    				SubThread.lerListaDaSubThread(subLista);
+    			});
+    			subThreads.add(thread);
+    		}
+    	}
+    	
+    	subThreads.forEach(thread -> thread.start());
+    	
+    	subThreads.forEach(thread -> {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		});
+    }
+    
+    private static void lerListaDaSubThread(List<String> parteConteudoArquivo) {
+    	Cidade cidade = new Cidade("teste");
+    	for(String linha : parteConteudoArquivo) {
+			if(linha.contains("Year")) {
+				continue;
+			}
+			String[] values = linha.split(",");
+	        if (values.length == 6) {
+	            int ano = Integer.parseInt(values[4]);
+	            int mes = Integer.parseInt(values[2]);
+	            double temperatura = Double.parseDouble(values[5]);
+	
+	            cidade.adicionarTemperatura(ano, mes, temperatura);
+	        }    		
+    	}
+    	synchronized (contador) {
+			contador++;
+		}
+	    System.out.println("Lista executada pela thread: " + Thread.currentThread().getName());
+//	    cidade.Min_Max();
+    }
 
 
 

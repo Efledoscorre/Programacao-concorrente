@@ -14,21 +14,18 @@ public class Main {
 	public static final Path DIRETORIOCIDADES = Paths.get("src/resources/temperaturas_cidades/");
 
     private static int contador = 0;
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
+    	//Descomente a linha abaixo para testar os experimentos com subthreads
+    	//SubThread.start();
     	
+    	int THREADS = 2;
     	List<String> arquivos = lerNomeArquivosCSV();
-
-    	int threads = 8;
-        List<List<String>> listaArquivosPorThread = separarArquivosPorThread(arquivos, threads);
-
-           SubThread.experimentoComSubThread(listaArquivosPorThread);
-
-
-
+    	List<List<String>> listaArquivosPorThread = separarArquivosPorThread(arquivos, THREADS);
+    	
         ArrayList<Long> temposDeExecucao = new ArrayList<>();
         
         long inicioTotal = System.currentTimeMillis();
-        /*for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 10; i++) {
             long inicio = System.currentTimeMillis();
             List<Thread> threadsAExecutar = listaArquivosPorThread.stream().map(lista -> {
                 return new Thread(() -> {
@@ -50,18 +47,19 @@ public class Main {
         
         temposDeExecucao.add(fim - inicio);
 
-       /* Transformar esse print em impressão dos dados em arquivo txt
-        (System.out.println("ACABOU");
+        //Transformar esse print em impressão dos dados em arquivo txt
+        System.out.println("ACABOU");
         System.out.println("CONTAGEM: " + contador);
-        System.out.println("TEMPO DE EXECUÇÃO: " + (fim - inicio));)
+        System.out.println("TEMPO DE EXECUÇÃO: " + (fim - inicio));
 
         }
-        */
+       
+//        LongStream statistics = temposDeExecucao.stream().mapToLong(num -> num);
 
         long finalTotal = System.currentTimeMillis();
         long tempoTotal = finalTotal - inicioTotal;
         System.out.println("Tempo de Execução:" + temposDeExecucao);
-        System.out.println("Tempo total: " + tempoTotal);
+//        System.out.println("Total: " + statistics.sum() + "; Mínima: " + statistics.min() + "; Máxima: " + statistics.max() + "; Média: " + statistics.average());
     }
 
     private static void lerArquivo(String caminho){
@@ -91,7 +89,7 @@ public class Main {
         cidade.Min_Max();
     }
     
-    private static List<String> lerNomeArquivosCSV() throws IOException{
+    public static List<String> lerNomeArquivosCSV() throws IOException{
     	 List<String> arquivos = new ArrayList<>();
         if (Files.isDirectory(DIRETORIOCIDADES)) {
             DirectoryStream<Path> pathsArquivo = Files.newDirectoryStream(DIRETORIOCIDADES);
@@ -104,7 +102,7 @@ public class Main {
         return arquivos;
     }
     
-    private static List<List<String>> separarArquivosPorThread(List<String> arquivos, int threads){
+    public static List<List<String>> separarArquivosPorThread(List<String> arquivos, int threads){
     	List<List<String>> arquivosPorThread = new ArrayList<>();
     	
     	
