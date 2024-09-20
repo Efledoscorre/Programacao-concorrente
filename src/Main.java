@@ -9,22 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+	private static final Path DIRETORIOCIDADES = Paths.get("src/resources/temperaturas_cidades");
 
     private static int contador = 0;
     public static void main(String[] args) throws IOException {
 
-        Path diretorioCidades = Paths.get("src/resources/temperaturas_cidades");
-
-        List<String> arquivos = new ArrayList<>();
-
-        if (Files.isDirectory(diretorioCidades)) {
-            DirectoryStream<Path> pathsArquivo = Files.newDirectoryStream(diretorioCidades);
-            for(Path arquivo : pathsArquivo){
-                arquivos.add(arquivo.getFileName().toString());
-//                lerArquivo(arquivo);
-
-            }
-        }
+    	List<String> arquivos = lerNomeArquivosCSV();
 
         List<List<String>> listaArquivosPorThread = new ArrayList<>();
         int numArquivos = arquivos.size();
@@ -88,4 +78,21 @@ public class Main {
         System.out.println(cidade.nome);
         cidade.Min_Max();
     }
+    
+    private static List<String> lerNomeArquivosCSV() throws IOException{
+    	 List<String> arquivos = new ArrayList<>();
+        if (Files.isDirectory(DIRETORIOCIDADES)) {
+            DirectoryStream<Path> pathsArquivo = Files.newDirectoryStream(DIRETORIOCIDADES);
+            for(Path arquivo : pathsArquivo){
+                arquivos.add(arquivo.getFileName().toString());
+
+            }
+        }
+        
+        return arquivos;
+    }
+    
+    
+    
+    
 }
