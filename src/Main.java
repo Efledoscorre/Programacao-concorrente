@@ -13,19 +13,12 @@ public class Main {
 
     private static int contador = 0;
     public static void main(String[] args) throws IOException {
-
+    	
+    	int threads = 2;
+    	
     	List<String> arquivos = lerNomeArquivosCSV();
 
-        List<List<String>> listaArquivosPorThread = new ArrayList<>();
-        int numArquivos = arquivos.size();
-        int threads = 4;
-
-        for(int i = 0; i < numArquivos;){
-            int inicioSubList = i;
-            int sublistQtd = numArquivos / threads;
-            i += sublistQtd;
-            listaArquivosPorThread.add(arquivos.subList(inicioSubList, i));
-        }
+        List<List<String>> listaArquivosPorThread = separarArquivosPorThread(arquivos, threads);
 
         List<Thread> threadsAExecutar = listaArquivosPorThread.stream().map(lista -> {
             return new Thread(() -> {
@@ -90,6 +83,22 @@ public class Main {
         }
         
         return arquivos;
+    }
+    
+    private static List<List<String>> separarArquivosPorThread(List<String> arquivos, int threads){
+    	List<List<String>> arquivosPorThread = new ArrayList<>();
+    	
+    	
+    	int numArquivos = arquivos.size();
+        int sublistQtd = numArquivos / threads;
+        
+        for(int i = 0; i < numArquivos;){
+            int inicioSubList = i;
+            i += sublistQtd;
+            arquivosPorThread.add(arquivos.subList(inicioSubList, i));
+        }
+        
+        return arquivosPorThread;
     }
     
     
