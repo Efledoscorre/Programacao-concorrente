@@ -7,6 +7,8 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.LongStream;
@@ -51,11 +53,12 @@ public class Main {
             long fim = System.currentTimeMillis();
             temposDeExecucao.add(fim - inicio);
             
-            salvarResultado(nomeArquivo, i + 1, contador, fim - inicio);
             System.out.println("ACABOU");
             System.out.println("CONTAGEM: " + contador);
             System.out.println("TEMPO DE EXECUÇÃO: " + (fim - inicio));
         }
+        salvarResultado(nomeArquivo, temposDeExecucao);
+
 
         long finalTotal = System.currentTimeMillis();
         long tempoTotal = finalTotal - inicioTotal;
@@ -114,10 +117,14 @@ public class Main {
         return arquivosPorThread;
     }
 
-    private static void salvarResultado(String nomeArquivo, int rodada, int contagem, long tempoExecucao) {
+    private static void salvarResultado(String nomeArquivo, ArrayList<Long> temposDeExecucao) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivo, true))) {
-            writer.write("Rodada " + rodada + "\n");
-            writer.write("Tempo de Execução: " + tempoExecucao + "\n\n");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss");
+            writer.write("Executado em: " + LocalDateTime.now().format(dtf) + "\n\n");
+            for (int i = 1; i <= temposDeExecucao.size(); i++) {
+                writer.write("Rodada " + i + "\n");
+                writer.write("Tempo de Execução: " + temposDeExecucao.get(i - 1) + "\n\n");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -125,7 +132,8 @@ public class Main {
 
     private static void salvarEstatisticas(String nomeArquivo, List<Long> temposDeExecucao, LongStream statistics) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivo, true))) {
-            writer.write("Tempo Médio: " + temposDeExecucao.stream().mapToLong(num -> num).average().orElse(0) + "\n");
+            writer.write("Tempo Médio: " + temposDeExecucao.stream().mapToLong(num -> num).average().orElse(0) + "\n\n");
+            writer.write("------------------------------------\n\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
