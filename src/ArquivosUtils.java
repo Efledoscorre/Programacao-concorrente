@@ -16,12 +16,14 @@ public class ArquivosUtils {
 
     public static final Path DIRETORIO_CIDADES = Paths.get("src" + File.separator + "resources" + File.separator + "temperaturas_cidades" + File.separator);
 
-    public static List<String> listaNomesArquivosCSV() throws IOException {
+    public static List<String> listaNomesArquivosCSV() {
         List<String> arquivos = new ArrayList<>();
         try(DirectoryStream<Path> pathsArquivo = Files.newDirectoryStream(DIRETORIO_CIDADES)){
             for (Path arquivo : pathsArquivo) {
                 arquivos.add(arquivo.getFileName().toString());
             }
+        }catch (Exception e){
+            throw new RuntimeException(e);
         }
         return arquivos;
     }
