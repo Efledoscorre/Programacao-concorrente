@@ -2,7 +2,7 @@
   <h2 align="center">Visão geral do projeto</h2>
 
   <p align="center">
-    Programa feito em java utilizando threads para leitura de arquivos csv, voltando como resposta o tempo de execução mínimo, médio e máximo de cada execução. 
+    Programa feito em java utilizando threads para leitura de arquivos csv, voltando como resposta o tempo de execução mínimo, médio e máximo de cada execução.. 
     <br>
     </p>
 </p>
