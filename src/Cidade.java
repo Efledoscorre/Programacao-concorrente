@@ -58,6 +58,8 @@ public class Cidade {
 
                     double media = soma / temperaturasMes.size();
                     System.out.printf("mes: %d  minima: %.2f  maxima: %.2f  media: %.2f%n", mes, min, max, media);
+                }else{
+                    System.out.println("sem dados para analisar");
                 }
             }
         }

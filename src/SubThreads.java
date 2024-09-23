@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LongSummaryStatistics;
 import java.util.stream.LongStream;
 
 public class SubThreads {
@@ -52,12 +53,12 @@ public class SubThreads {
 		}
 		ArquivosUtils.salvarResultado(nomeArquivoExperimento, temposDeExecucao);
 
-		LongStream statistics = temposDeExecucao.stream().mapToLong(num -> num);
+		LongSummaryStatistics statistics = temposDeExecucao.stream().mapToLong(num -> num).summaryStatistics();
 
-		System.out.println("Total: " + statistics.sum()
-				+ "; minima: " + temposDeExecucao.stream().mapToLong(num -> num).min().orElse(0)
-				+ "; maxima: " + temposDeExecucao.stream().mapToLong(num -> num).max().orElse(0)
-				+ "; media: " + temposDeExecucao.stream().mapToLong(num -> num).average().orElse(0));
+		System.out.println("Total: " + statistics.getSum()
+				+ "; minima: " + statistics.getMin()
+				+ "; maxima: " + statistics.getMax()
+				+ "; media: " + statistics.getAverage());
 		ArquivosUtils.salvarEstatisticas(nomeArquivoExperimento, temposDeExecucao, statistics);
 
 	}

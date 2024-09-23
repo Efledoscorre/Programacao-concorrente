@@ -1,0 +1,14 @@
+Executado em: 23/09/2024 às 09:32:37
+
+Rodada 1
+Tempo de Execução: 9497
+
+Rodada 2
+Tempo de Execução: 9411
+
+Tempo Médio: 9454.0
+Tempo mínimo: 9411
+Tempo máximo: 9497
+
+------------------------------------
+

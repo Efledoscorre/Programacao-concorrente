@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LongSummaryStatistics;
 import java.util.stream.LongStream;
 
 public class ArquivosUtils {
@@ -66,6 +67,7 @@ public class ArquivosUtils {
     public static void salvarResultado(String nomeArquivo, List<Long> temposDeExecucao) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivo, true))) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss");
+            LongSummaryStatistics statistics = temposDeExecucao.stream().mapToLong(num -> num).summaryStatistics();
             writer.write("Executado em: " + LocalDateTime.now().format(dtf) + "\n\n");
             for (int i = 1; i <= temposDeExecucao.size(); i++) {
                 writer.write("Rodada " + i + "\n");
@@ -76,9 +78,11 @@ public class ArquivosUtils {
         }
     }
 
-    public static void salvarEstatisticas(String nomeArquivo, List<Long> temposDeExecucao, LongStream statistics) {
+    public static void salvarEstatisticas(String nomeArquivo, List<Long> temposDeExecucao, LongSummaryStatistics statistics) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivo, true))) {
-            writer.write("Tempo Médio: " + temposDeExecucao.stream().mapToLong(num -> num).average().orElse(0) + "\n\n");
+            writer.write("Tempo Médio: " + temposDeExecucao.stream().mapToLong(num -> num).average().orElse(0) + "\n");
+            writer.write("Tempo mínimo: " + statistics.getMin() + "\n");
+            writer.write("Tempo máximo: " + statistics.getMax() + "\n\n");
             writer.write("------------------------------------\n\n");
         } catch (IOException e) {
             e.printStackTrace();
