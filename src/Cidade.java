@@ -2,14 +2,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cidade {
-    String nome;
-    List<Temperatura> temperaturas;
+    private String nome;
+    private List<Temperatura> temperaturas;
 
     public Cidade(String nome) {
         this.nome = nome;
         this.temperaturas = new ArrayList<>();
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public List<Temperatura> getTemperaturas() {
+        return temperaturas;
+    }
 
     public void adicionarTemperatura(int ano, int mes, double valor) {
         this.temperaturas.add(new Temperatura(ano, mes, valor));

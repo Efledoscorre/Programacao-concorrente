@@ -1,20 +1,11 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.LongStream;
 
 public class Main {
-    public static final Path DIRETORIOCIDADES = Paths.get("src/resources/temperaturas_cidades/");
     private static int contador = 0;
 
     public static void main(String[] args) throws Exception {
@@ -26,8 +17,8 @@ public class Main {
         String nomeArquivo = "versao_" + contVersoes + ".txt";
 
         int THREADS = 2;
-        List<String> arquivos = lerNomeArquivosCSV();
-        List<List<String>> listaArquivosPorThread = separarArquivosPorThread(arquivos, THREADS);
+        List<String> arquivos = ArquivosUtils.listaNomesArquivosCSV();
+        List<List<String>> listaArquivosPorThread = ArquivosUtils.separaListaArquivosPorThread(arquivos, THREADS);
 
         ArrayList<Long> temposDeExecucao = new ArrayList<>();
         long inicioTotal = System.currentTimeMillis();
@@ -52,13 +43,12 @@ public class Main {
 
             long fim = System.currentTimeMillis();
             temposDeExecucao.add(fim - inicio);
-            
+
             System.out.println("ACABOU");
             System.out.println("CONTAGEM: " + contador);
             System.out.println("TEMPO DE EXECUÇÃO: " + (fim - inicio));
         }
-        salvarResultado(nomeArquivo, temposDeExecucao);
-
+        ArquivosUtils.salvarResultado(nomeArquivo, temposDeExecucao);
 
         long finalTotal = System.currentTimeMillis();
         long tempoTotal = finalTotal - inicioTotal;
@@ -68,7 +58,7 @@ public class Main {
         + "; minima: " + temposDeExecucao.stream().mapToLong(num -> num).min().orElse(0)
         + "; maxima: " + temposDeExecucao.stream().mapToLong(num -> num).max().orElse(0)
         + "; media: " + temposDeExecucao.stream().mapToLong(num -> num).average().orElse(0));
-        salvarEstatisticas(nomeArquivo, temposDeExecucao, statistics);
+        ArquivosUtils.salvarEstatisticas(nomeArquivo, temposDeExecucao, statistics);
     }
 
     private static void lerArquivo(String caminho) {
@@ -89,53 +79,7 @@ public class Main {
         } catch (IOException ex) {
             throw new RuntimeException("Houve um erro", ex);
         }
-        System.out.println(cidade.nome);
+        System.out.println(cidade.getNome());
         cidade.Min_Max();
-    }
-
-    public static List<String> lerNomeArquivosCSV() throws IOException {
-        List<String> arquivos = new ArrayList<>();
-        if (Files.isDirectory(DIRETORIOCIDADES)) {
-            DirectoryStream<Path> pathsArquivo = Files.newDirectoryStream(DIRETORIOCIDADES);
-            for (Path arquivo : pathsArquivo) {
-                arquivos.add(arquivo.getFileName().toString());
-            }
-        }
-        return arquivos;
-    }
-
-    public static List<List<String>> separarArquivosPorThread(List<String> arquivos, int threads) {
-        List<List<String>> arquivosPorThread = new ArrayList<>();
-        int numArquivos = arquivos.size();
-        int sublistQtd = numArquivos / threads;
-
-        for (int i = 0; i < numArquivos;) {
-            int inicioSubList = i;
-            i += sublistQtd;
-            arquivosPorThread.add(arquivos.subList(inicioSubList, i));
-        }
-        return arquivosPorThread;
-    }
-
-    private static void salvarResultado(String nomeArquivo, ArrayList<Long> temposDeExecucao) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivo, true))) {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss");
-            writer.write("Executado em: " + LocalDateTime.now().format(dtf) + "\n\n");
-            for (int i = 1; i <= temposDeExecucao.size(); i++) {
-                writer.write("Rodada " + i + "\n");
-                writer.write("Tempo de Execução: " + temposDeExecucao.get(i - 1) + "\n\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void salvarEstatisticas(String nomeArquivo, List<Long> temposDeExecucao, LongStream statistics) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivo, true))) {
-            writer.write("Tempo Médio: " + temposDeExecucao.stream().mapToLong(num -> num).average().orElse(0) + "\n\n");
-            writer.write("------------------------------------\n\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
