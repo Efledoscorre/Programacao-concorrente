@@ -63,19 +63,18 @@ public class SubThreads {
 	}
 
     public static void lerArquivoComSubThreads(List<String> listaNomeArquivos) throws IOException {
-    	Cidade cidade = new Cidade("teste");
 
     	for(String arquivo : listaNomeArquivos) {
     		List<List<String>> subListasPorThread = ArquivosUtils.separaConteudoArquivoEm25Partes(arquivo);
     		for(List<String> subLista : subListasPorThread) {
-				SubThreads.lerListaDaSubThread(subLista);
+				SubThreads.lerListaDaSubThread(subLista, arquivo);
     		}
     	}
 
     }
     
-    private static void lerListaDaSubThread(List<String> parteConteudoArquivo) {
-    	Cidade cidade = new Cidade("teste");
+    public static void lerListaDaSubThread(List<String> parteConteudoArquivo, String nomeCidade) {
+    	Cidade cidade = new Cidade(nomeCidade);
     	for(String linha : parteConteudoArquivo) {
 			if(linha.contains("Year")) {
 				continue;
@@ -89,8 +88,9 @@ public class SubThreads {
 	            cidade.adicionarTemperatura(ano, mes, temperatura);
 	        }    		
     	}
-	    System.out.println("Lista executada pela thread: " + Thread.currentThread().getName());
-	    cidade.Min_Max();
+
+		cidade.Min_Max();
+
     }
 
 

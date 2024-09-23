@@ -23,13 +23,13 @@ public class Cidade {
     }
 
 
-    public void Min_Max() {
+    public void  Min_Max() {
         System.out.println("cidade: " + nome);
         int anoInicial = 1995;
         int anoFinal = 2020;
+        boolean printou = false;
 
         for (int ano = anoInicial; ano <= anoFinal; ano++) {
-            System.out.println("ano: " + ano + "THREAD: " + Thread.currentThread().getName());
 
             for (int mes = 1; mes <= 12; mes++) {
                 List<Double> temperaturasMes = new ArrayList<>();
@@ -50,13 +50,16 @@ public class Cidade {
                         soma += temp;
                     }
 
+                    if(!printou){
+                        System.out.println();
+                        System.out.println("ano: " + ano);
+                        printou = true;
+                    }
+
                     double media = soma / temperaturasMes.size();
                     System.out.println("mes: " + mes + "  minima: " + min + "  maxima: " + max + "  media: " + media);
-                } else {
-                    System.out.println("o mes: " + mes + " não tem dados para serem analisados");
                 }
             }
-            System.out.println();
         }
     }
 }
