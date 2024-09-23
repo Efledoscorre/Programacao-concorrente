@@ -48,17 +48,22 @@ public class ArquivosUtils {
         List<List<String>> arquivosPorThread = new ArrayList<>();
 
         int sublistQtd = (lines.size()) / 25;
+        int resto = lines.size() % 25;
 
-        for(int i = 0; i < lines.size() - 100;){
+        for(int i = 0; i < lines.size();){
             int inicioSubList = i;
             i += sublistQtd;
+
+            if(i + resto == lines.size()){
+                i = lines.size();
+            }
             arquivosPorThread.add(lines.subList(inicioSubList, i));
         }
 
         return arquivosPorThread;
     }
 
-    public static void salvarResultado(String nomeArquivo, ArrayList<Long> temposDeExecucao) {
+    public static void salvarResultado(String nomeArquivo, List<Long> temposDeExecucao) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivo, true))) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss");
             writer.write("Executado em: " + LocalDateTime.now().format(dtf) + "\n\n");

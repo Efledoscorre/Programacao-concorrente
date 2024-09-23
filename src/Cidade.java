@@ -29,7 +29,7 @@ public class Cidade {
         int anoFinal = 2020;
 
         for (int ano = anoInicial; ano <= anoFinal; ano++) {
-            System.out.println("ano: " + ano);
+            System.out.println("ano: " + ano + "THREAD: " + Thread.currentThread().getName());
 
             for (int mes = 1; mes <= 12; mes++) {
                 List<Double> temperaturasMes = new ArrayList<>();

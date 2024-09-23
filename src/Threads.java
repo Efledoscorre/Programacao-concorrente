@@ -7,6 +7,8 @@ import java.util.stream.LongStream;
 
 public class Threads {
 
+    private static final List<String> NOMES_TODOS_ARQUIVOS = ArquivosUtils.listaNomesArquivosCSV();
+
     public static void experimentos1A10(int rodadas){
         final List<Integer> numeroThreadsExperimentos = List.of(1, 2, 4, 8, 16, 32, 64, 80, 160, 320);
 
@@ -18,8 +20,7 @@ public class Threads {
     private static void realizaExperimento(int THREADS, int numeroExperimento, int qtdRodadas){
         String nomeArquivo = "versao_" + numeroExperimento + ".txt";
 
-        List<String> arquivos = ArquivosUtils.listaNomesArquivosCSV();
-        List<List<String>> listaArquivosPorThread = ArquivosUtils.separaListaArquivosPorThread(arquivos, THREADS);
+        List<List<String>> listaArquivosPorThread = ArquivosUtils.separaListaArquivosPorThread(NOMES_TODOS_ARQUIVOS, THREADS);
 
         ArrayList<Long> temposDeExecucao = new ArrayList<>();
 
