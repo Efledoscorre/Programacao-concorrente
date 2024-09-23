@@ -57,7 +57,7 @@ public class Cidade {
                     }
 
                     double media = soma / temperaturasMes.size();
-                    System.out.println("mes: " + mes + "  minima: " + min + "  maxima: " + max + "  media: " + media);
+                    System.out.printf("mes: %d  minima: %.2f  maxima: %.2f  media: %.2f%n", mes, min, max, media);
                 }
             }
         }
