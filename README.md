@@ -71,7 +71,7 @@ O número de threads pode ser configurado diretamente no código, na classe Main
 Se você quiser alterar o número de threads ou o diretório dos arquivos CSV, você pode modificar esses valores diretamente nas classes Main e SubThread. 
 
 * Observação:
-Ao executar, o programa irá criar 20 arquivos txt na pasta raíz do projeto
+Ao executar, o programa irá criar 20 arquivos txt na pasta raíz do projeto.
 
 
 
